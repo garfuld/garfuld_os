@@ -1,0 +1,29 @@
+name: Build Garfuld OS ISO
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nasm gcc-multilib xorriso grub-pc-bin grub-common mtools
+
+    - name: Build ISO
+      run: make garfuld.iso
+
+    - name: Upload ISO artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: garfuld-os-iso
+        path: garfuld.iso
+        retention-days: 30
